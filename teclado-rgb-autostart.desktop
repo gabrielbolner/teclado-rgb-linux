@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Teclado RGB (aplicar cor)
+Exec=teclado-rgb --apply
+NoDisplay=true
+Terminal=false
+X-GNOME-Autostart-enabled=true
