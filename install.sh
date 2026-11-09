@@ -78,6 +78,49 @@ dkms install -m "$NAME" -v "$VERSION" --force
 
 echo "uniwill_wmi" > /etc/modules-load.d/teclado-rgb.conf
 
+if mokutil --sb-state 2>/dev/null | grep -qi enabled; then
+    echo "==> Secure Boot ligado: conferindo a chave que assina o driver"
+    MOK_KEY=""
+    for candidate in /var/lib/shim-signed/mok/MOK.der /var/lib/dkms/mok.pub; do
+        if [ -f "$candidate" ]; then
+            MOK_KEY="$candidate"
+            break
+        fi
+    done
+    [ -n "$MOK_KEY" ] || fail "o Secure Boot está ligado, mas não achei a chave de assinatura do DKMS."
+    if mokutil --test-key "$MOK_KEY" 2>/dev/null | grep -qi "already enrolled"; then
+        echo "    A chave já está cadastrada."
+    else
+        cat <<'EOF'
+
+    O Secure Boot está ligado, então o driver precisa ser assinado por uma chave
+    cadastrada no seu computador. Isso só é feito uma vez. NÃO é preciso desligar
+    o Secure Boot.
+
+    Agora vou pedir para você criar uma senha temporária (8 caracteres ou mais).
+    Ela só vai ser usada uma vez, na tela azul do próximo boot.
+
+EOF
+        mokutil --import "$MOK_KEY" || fail "não foi possível preparar o cadastro da chave."
+        cat <<'EOF'
+
+==> Falta só reiniciar. No próximo boot aparece uma tela azul (MOK Management):
+
+    1. aperte qualquer tecla para entrar;
+    2. escolha "Enroll MOK";
+    3. escolha "Continue" e depois "Yes";
+    4. digite a senha temporária que você acabou de criar;
+    5. escolha "Reboot".
+
+    Depois de reiniciar, rode o instalador de novo para terminar:
+
+        cd ~/teclado-rgb-linux && ./install.sh
+
+EOF
+        exit 0
+    fi
+fi
+
 echo "==> Liberando o LED do teclado para o usuário"
 cat > /etc/udev/rules.d/99-teclado-rgb.rules <<'EOF'
 ACTION=="add", SUBSYSTEM=="leds", KERNEL=="rgb:kbd_backlight", RUN+="/bin/chmod 0666 /sys%p/brightness /sys%p/multi_intensity"
@@ -93,9 +136,6 @@ for _ in $(seq 1 10); do
 done
 if [ ! -e "$LED/multi_intensity" ]; then
     dmesg | grep -iE 'tuxedo|uniwill' | tail -n 10 >&2 || true
-    if mokutil --sb-state 2>/dev/null | grep -qi enabled; then
-        echo "O Secure Boot está ligado: reinicie, confirme a chave MOK na tela azul e rode o instalador de novo." >&2
-    fi
     fail "o driver foi instalado, mas o LED do teclado não apareceu. O driver da TUXEDO só aceita CPUs que ele já conhece em notebooks de outras marcas. Abra uma issue com a saída acima, o modelo do notebook e a saída de 'lscpu'."
 fi
 chmod 0666 "$LED/brightness" "$LED/multi_intensity"

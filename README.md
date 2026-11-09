@@ -45,6 +45,26 @@ sudo apt install -y git && git clone https://github.com/giordanowt/teclado-rgb-l
 
 O instalador mostra cada etapa e termina com a mensagem **"Pronto!"**. Se aparecer uma mensagem de **ERRO**, veja a seção [Deu erro?](#deu-erro).
 
+Se o seu computador estiver com o **Secure Boot** ligado, o instalador para no meio e pede uma reinicialização. Veja a seção abaixo.
+
+### Secure Boot: não precisa desligar
+
+O Secure Boot é uma proteção da inicialização do computador que só deixa carregar drivers assinados. Muitos notebooks vêm com ele ligado. **Você não precisa desligar.** O Ubuntu assina o driver com uma chave própria do seu computador, e você só precisa autorizar essa chave uma vez:
+
+1. Durante a instalação, o terminal pede para você **criar uma senha temporária** (8 caracteres ou mais). Anote, porque você vai digitar ela em seguida.
+2. **Reinicie o computador.** Antes do Ubuntu abrir, aparece uma **tela azul** chamada *MOK Management*.
+3. Aperte qualquer tecla, escolha **Enroll MOK**, depois **Continue** e **Yes**.
+4. Digite a **senha temporária** que você criou e escolha **Reboot**.
+5. Com o Ubuntu aberto de novo, abra o terminal e termine a instalação:
+
+   ```bash
+   cd ~/teclado-rgb-linux && ./install.sh
+   ```
+
+> A tela azul fica poucos segundos esperando. Se ela passar direto e o Ubuntu abrir, rode o `./install.sh` de novo, reinicie e fique de olho.
+
+Se o Secure Boot já estiver desligado, ou se a chave já estiver cadastrada (por exemplo, porque você já instalou drivers da NVIDIA), nada disso aparece.
+
 **5. Abra o app**
 
 Aperte a tecla `Super` (a do logo do Windows), digite **Teclado RGB** e abra. Clique numa cor e o teclado muda na hora.
@@ -98,7 +118,6 @@ Remove o driver, o app, a regra de permissão e o início automático.
 - **Chassis Clevo** ainda não são suportados. O instalador detecta e avisa.
 - **Só CPUs conhecidas pelo driver.** Em notebooks de outras marcas, o tuxedo-drivers só carrega com CPUs que estão na lista de compatibilidade dele (por exemplo, AMD Ryzen até a série 7000 e Intel até a 12ª geração). Com CPUs mais novas, o instalador avisa que o LED não apareceu.
 - **Teclados com RGB por tecla** criam vários LEDs, e o app controla só o primeiro. Teclados de uma zona funcionam por completo.
-- **Secure Boot ligado:** o Ubuntu pede para cadastrar uma chave MOK durante a instalação. Reinicie, confirme a chave na tela azul e rode o instalador de novo.
 
 ## Como funciona
 
