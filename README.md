@@ -18,6 +18,7 @@ Feito para notebooks com chassi **Uniwill/Tongfang**, a base de vários modelos 
 | Notebook | CPU | Sistema | Status |
 |---|---|---|---|
 | Avell A52r | AMD Ryzen 7 7435HS | Ubuntu 26.04, kernel 7.0 | ✅ Funciona |
+| Avell A52i | Intel Core i7-13620H | Ubuntu 26.04, kernel 7.0 | ✅ Funciona |
 
 Testou em outro modelo? Abra uma issue dizendo se funcionou, e ele entra na tabela.
 
@@ -116,7 +117,7 @@ Remove o driver, o app, a regra de permissão e o início automático.
 ## Limitações conhecidas
 
 - **Chassis Clevo** ainda não são suportados. O instalador detecta e avisa.
-- **Só CPUs conhecidas pelo driver.** Em notebooks de outras marcas, o tuxedo-drivers só carrega com CPUs que estão na lista de compatibilidade dele (por exemplo, AMD Ryzen até a série 7000 e Intel até a 12ª geração). Com CPUs mais novas, o instalador avisa que o LED não apareceu.
+- **Só CPUs conhecidas pelo driver.** Em notebooks de outras marcas, o tuxedo-drivers só carrega com CPUs que estão na lista de compatibilidade dele (por exemplo, AMD Ryzen até a série 7000 e Intel até a 12ª geração, além da 13ª geração de notebook, Raptor Lake-P, que o instalador libera). Com CPUs mais novas, o instalador avisa que o LED não apareceu.
 - **Teclados com RGB por tecla** criam vários LEDs, e o app controla só o primeiro. Teclados de uma zona funcionam por completo.
 
 ## Como funciona

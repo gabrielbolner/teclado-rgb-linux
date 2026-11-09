@@ -46,6 +46,7 @@ echo "==> Baixando o driver $NAME ($DRIVER_REF)"
 git -C "$WORK" init -q drivers
 git -C "$WORK/drivers" fetch -q --depth 1 "$DRIVER_REPO" "$DRIVER_REF"
 git -C "$WORK/drivers" checkout -q FETCH_HEAD
+sed -i 's/^\(\s*\)X86_MATCH_VFM(INTEL_ALDERLAKE_L, NULL),$/&\n\1X86_MATCH_VFM(INTEL_RAPTORLAKE_P, NULL),/' "$WORK/drivers/src/tuxedo_compatibility_check/tuxedo_compatibility_check.c"
 VERSION="$(grep -m1 -oP 'version: "\K[^"]+' "$WORK/drivers/package.yml")"
 DEST="/usr/src/$NAME-$VERSION"
 
